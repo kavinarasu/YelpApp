@@ -21,6 +21,7 @@
     [super viewDidLoad];
     self.yelpTableView.dataSource = self;
     [self.yelpTableView registerNib:[UINib nibWithNibName:@"YelpContentCell" bundle:nil] forCellReuseIdentifier:@"yelpContentCell"];
+    self.yelpTableView.rowHeight = UITableViewAutomaticDimension;
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:YelpSortModeBestMatched
                       categories:@[@"burgers"]
