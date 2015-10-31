@@ -14,13 +14,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="378" height="91.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2gQ-Le-Kn6">
-                        <rect key="frame" x="8" y="8" width="70" height="70"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="70" id="lps-Bp-6Fb"/>
-                            <constraint firstAttribute="width" constant="70" id="y5w-Ll-Cyk"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="1. Grand Pu Bah" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vqc-XO-aoO">
                         <rect key="frame" x="86" y="8" width="240.5" height="14.5"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -64,15 +57,24 @@
                             <constraint firstAttribute="height" constant="17" id="qIK-Q2-qoM"/>
                         </constraints>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2gQ-Le-Kn6">
+                        <rect key="frame" x="8" y="8" width="70" height="70"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="70" id="lps-Bp-6Fb"/>
+                            <constraint firstAttribute="width" constant="70" id="y5w-Ll-Cyk"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="cdR-fl-1aw" secondAttribute="trailing" constant="8" id="4eS-6D-RpR"/>
                     <constraint firstItem="ycO-Qm-ppK" firstAttribute="top" secondItem="vqc-XO-aoO" secondAttribute="bottom" constant="3.5" id="C1x-YS-gpN"/>
                     <constraint firstItem="TBD-CS-6Ts" firstAttribute="leading" secondItem="vqc-XO-aoO" secondAttribute="trailing" constant="8" id="EM7-Hq-1xb"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="2gQ-Le-Kn6" secondAttribute="bottom" constant="8" id="GaO-0K-5qd"/>
                     <constraint firstItem="cQm-nc-gRO" firstAttribute="leading" secondItem="2gQ-Le-Kn6" secondAttribute="trailing" constant="8" id="LL9-8t-YM6"/>
                     <constraint firstItem="TBD-CS-6Ts" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="LXc-NO-gXg"/>
                     <constraint firstItem="vqc-XO-aoO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="Lxs-zF-1fL"/>
                     <constraint firstItem="ycO-Qm-ppK" firstAttribute="leading" secondItem="2gQ-Le-Kn6" secondAttribute="trailing" constant="8" id="Sah-TI-BQc"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="cQm-nc-gRO" secondAttribute="bottom" constant="8" id="TgM-Gl-J4g"/>
                     <constraint firstItem="cQm-nc-gRO" firstAttribute="top" secondItem="JRI-wa-vxg" secondAttribute="bottom" constant="2" id="XWL-Fw-bvg"/>
                     <constraint firstItem="cdR-fl-1aw" firstAttribute="top" secondItem="TBD-CS-6Ts" secondAttribute="bottom" constant="3" id="XtL-aE-nLr"/>
                     <constraint firstItem="2gQ-Le-Kn6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="duY-p7-jAa"/>
