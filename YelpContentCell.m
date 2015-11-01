@@ -36,7 +36,6 @@
 - (void) setYelpBusiness:(YelpBusiness *)yelpBusiness {
     _yelpBusiness = yelpBusiness;
     [self.thumbnailImageView setImageWithURL:self.yelpBusiness.imageUrl];
-    NSLog(@"%@", self.yelpBusiness.imageUrl);
     self.nameLabel.text = self.yelpBusiness.name;
     self.distanceLabel.text = self.yelpBusiness.distance;
     self.reviewsLabel.text = [NSString stringWithFormat:@"%@ Reviews", self.yelpBusiness.reviewCount];

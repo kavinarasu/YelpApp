@@ -24,6 +24,9 @@
     [self.yelpTableView registerNib:[UINib nibWithNibName:@"YelpContentCell" bundle:nil] forCellReuseIdentifier:@"yelpContentCell"];
     self.yelpTableView.rowHeight = UITableViewAutomaticDimension;
     self.yelpTableView.estimatedRowHeight = 120;
+    self.title = @"Listing";
+    UISearchBar *search = [[UISearchBar alloc] init];
+    self.navigationItem.titleView = search;
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:YelpSortModeBestMatched
                       categories:@[@"burgers"]
@@ -31,9 +34,6 @@
                       completion:^(NSArray *businesses, NSError *error) {
                           self.businesses = businesses;
                           [self.yelpTableView reloadData];
-//                          for (YelpBusiness *business in businesses) {
-//                              NSLog(@"%@", business);
-//                          }
                       }];
 }
 
