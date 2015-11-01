@@ -9,8 +9,9 @@
 #import "MainViewController.h"
 #import "YelpBusiness.h"
 #import "YelpContentCell.h"
+#import "FiltersViewController.h"
 
-@interface MainViewController () <UITableViewDataSource>
+@interface MainViewController () <UITableViewDataSource, FiltersViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *yelpTableView;
 @property (strong, nonatomic) NSArray *businesses;
 
@@ -27,6 +28,7 @@
     self.title = @"Listing";
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:YelpSortModeBestMatched
                       categories:@[@"burgers"]
@@ -51,6 +53,16 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void) filtersViewController:(FiltersViewController *)filtersViewController didChangeFilters:(NSDictionary *)filters {
+    NSLog(@"Firing a networking event");
+}
+- (void) onFilterTapped {
+    FiltersViewController *viewController = [[FiltersViewController alloc] init];
+    viewController.delegate = self;
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:navigation animated:YES completion:nil];
 }
 
 @end
