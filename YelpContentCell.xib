@@ -87,6 +87,16 @@
                     <constraint firstItem="JRI-wa-vxg" firstAttribute="leading" secondItem="2gQ-Le-Kn6" secondAttribute="trailing" constant="8" id="vmb-Pd-bbQ"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="addressLabel" destination="JRI-wa-vxg" id="zW3-2u-9Ya"/>
+                <outlet property="categoryLabel" destination="cQm-nc-gRO" id="Wa0-FK-ku3"/>
+                <outlet property="costLabel" destination="cdR-fl-1aw" id="28E-DH-K1T"/>
+                <outlet property="distanceLabel" destination="TBD-CS-6Ts" id="CqQ-H0-kH0"/>
+                <outlet property="nameLabel" destination="vqc-XO-aoO" id="csq-YL-AOf"/>
+                <outlet property="reviewsImageView" destination="ycO-Qm-ppK" id="FGS-LF-RsW"/>
+                <outlet property="reviewsLabel" destination="Vo0-sW-E19" id="nj5-1C-DYv"/>
+                <outlet property="thumbnailImageView" destination="2gQ-Le-Kn6" id="2cH-iz-RCO"/>
+            </connections>
             <point key="canvasLocation" x="321" y="327"/>
         </tableViewCell>
     </objects>

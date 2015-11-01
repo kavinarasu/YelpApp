@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "YelpBusiness.h"
 
 @interface YelpContentCell : UITableViewCell
+
+@property (nonatomic, strong) YelpBusiness *yelpBusiness;
 
 @end

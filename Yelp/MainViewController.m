@@ -12,6 +12,7 @@
 
 @interface MainViewController () <UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *yelpTableView;
+@property (strong, nonatomic) NSArray *businesses;
 
 @end
 
@@ -28,19 +29,22 @@
                       categories:@[@"burgers"]
                            deals:NO
                       completion:^(NSArray *businesses, NSError *error) {
-                          for (YelpBusiness *business in businesses) {
-                              NSLog(@"%@", business);
-                          }
+                          self.businesses = businesses;
+                          [self.yelpTableView reloadData];
+//                          for (YelpBusiness *business in businesses) {
+//                              NSLog(@"%@", business);
+//                          }
                       }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return self.businesses.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     YelpContentCell *cell = [self.yelpTableView dequeueReusableCellWithIdentifier:@"yelpContentCell"];
+    cell.yelpBusiness = self.businesses[indexPath.row];
     return cell;
 }
 
