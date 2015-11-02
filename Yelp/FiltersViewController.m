@@ -10,7 +10,7 @@
 #import "SwitchCell.h"
 #import "YelpPickerCell.h"
 
-@interface FiltersViewController () <UITableViewDataSource, SwitchCellDelegate, YelpPickerCellDelegate>
+@interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, YelpPickerCellDelegate>
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *filtersTableView;
@@ -56,6 +56,7 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStylePlain target:self action:@selector(onApplyTapped)];
     self.filtersTableView.dataSource = self;
+    self.filtersTableView.delegate = self;
     [self.filtersTableView registerNib:[UINib nibWithNibName:@"SwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
     [self.filtersTableView registerNib:[UINib nibWithNibName:@"YelpPickerCell" bundle:nil] forCellReuseIdentifier:@"pickerCell"];
 
@@ -86,6 +87,10 @@
     }
     NSLog(@"%@", filters);
     return filters;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.filtersTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void) switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {

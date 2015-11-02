@@ -11,7 +11,7 @@
 #import "YelpContentCell.h"
 #import "FiltersViewController.h"
 
-@interface MainViewController () <UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate>
+@interface MainViewController () <UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *yelpTableView;
 @property (strong, nonatomic) NSArray *businesses;
 @property (strong, nonatomic) NSMutableString *searchTerm;
@@ -24,6 +24,7 @@
     [super viewDidLoad];
     self.searchTerm = [[NSMutableString alloc] initWithString:@"Restaurants"];
     self.yelpTableView.dataSource = self;
+    self.yelpTableView.delegate = self;
     [self.yelpTableView registerNib:[UINib nibWithNibName:@"YelpContentCell" bundle:nil] forCellReuseIdentifier:@"yelpContentCell"];
     self.yelpTableView.rowHeight = UITableViewAutomaticDimension;
     self.yelpTableView.estimatedRowHeight = 120;
@@ -37,6 +38,10 @@
     gestureRecognizer.cancelsTouchesInView = NO;
     [self.yelpTableView addGestureRecognizer:gestureRecognizer];
     [self yelpSearch:self.searchTerm withCategory:@"" withDeals:[@NO boolValue] withSortMode:YelpSortModeBestMatched withDistance:nil];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.yelpTableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
