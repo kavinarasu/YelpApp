@@ -13,8 +13,11 @@
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *filtersTableView;
-@property (nonatomic, strong) NSArray *categories;
+@property (nonatomic, strong) NSMutableDictionary *categories;
+@property (nonatomic, strong) NSMutableDictionary *deals;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
+@property (nonatomic, strong) NSMutableArray *filterOptions;
+@property (nonatomic, assign) BOOL dealsOn;
 
 - (void) initCategories;
 
@@ -27,7 +30,12 @@
     
     if(self) {
         self.selectedCategories = [[NSMutableSet alloc] init];
-        [self initCategories];
+//        [self initCategories];
+//        self.filters[0];
+        self.filterOptions = [[NSMutableArray alloc] init];
+        self.deals = [[NSMutableDictionary alloc] init];
+        self.categories = [[NSMutableDictionary alloc] init];
+        [self initFilterOptions];
     }
     return self;
 }
@@ -35,6 +43,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"Filters";
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStylePlain target:self action:@selector(onApplyTapped)];
@@ -51,28 +60,60 @@
         }
         NSString *categoryFilter = [names componentsJoinedByString:@","];
         [filters setObject:categoryFilter forKey:@"category_filter"];
+    } else {
+        [filters setObject:@"" forKey:@"category_filter"];
     }
+    if([self dealsOn]) {
+        [filters setObject:@YES forKey:@"deals_on"];
+    } else {
+        [filters setObject:@NO forKey:@"deals_on"];
+    }
+    NSLog(@"%@", filters);
     return filters;
 }
 
 - (void) switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {
     NSIndexPath *index = [self.filtersTableView indexPathForCell:cell];
-    if(value) {
-        [self.selectedCategories addObject:self.categories[index.row]];
+    NSDictionary *dict = self.filterOptions[index.section];
+    NSString *title = dict[@"title"];
+    NSArray *values = dict[@"values"];
+    if([title isEqualToString:@"Deals"]) {
+        [self setDealsOn:value];
+    }
+    if(value && [title isEqualToString:@"Categories"]) {
+//        [self.selectedCategories addObject:self.categories[index.section][index.row]];
+        [self.selectedCategories addObject:values[index.row]];
     } else {
-        [self.selectedCategories removeObject:self.categories[index.row]];
+        [self.selectedCategories removeObject:values[index.row]];
+//        [self.selectedCategories removeObject:self.categories[index.section][index.row]];
     }
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSLog(@"%ld", self.filterOptions.count);
+    return self.filterOptions.count;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.categories.count;
+    NSArray *filter = self.filterOptions[section][@"values"];
+    NSLog(@"Count is %ld", filter.count);
+    return filter.count;
+}
+
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return self.filterOptions[section][@"title"];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-    cell.filterLabel.text = self.categories[indexPath.row][@"name"];
-    cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
-    NSLog(@"Selected %s %s", cell.filterLabel.text, cell.on ? "true" : "false");
+//    NSLog(@"section and row is %ld, %ld", indexPath.section, indexPath.row);
+//    NSLog(@"%@", self.filterOptions[0][0][@"name"]);
+//    NSLog(@"%@", self.filterOptions[1][0][@"name"]);
+//    NSLog(@"%@", self.filterOptions[1][1][@"name"]);
+    cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
+    cell.on = [self.selectedCategories containsObject:self.filterOptions[indexPath.section][@"values"][indexPath.row]];
+//    cell.filterLabel.text = self.categories[indexPath.row][@"name"];
+//    cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
     cell.delegate = self;
     return cell;
 }
@@ -92,8 +133,29 @@
     [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
+- (void) initFilterOptions {
+    [self initDealsArray];
+    [self initCategories];
+    NSLog(@"%@", self.deals);
+    NSLog(@"%@", self.categories);
+    [self.filterOptions addObject:self.deals];
+    [self.filterOptions addObject:self.categories];
+//    NSLog(@"%@", self.deals);
+//    NSLog(@"Total count is %ld", self.filterOptions.count);
+}
+
+- (void) initDealsArray {
+//    self.deals = @[@{@"name": @"Offering Deals?"}];
+    NSArray *values = @[@{@"name": @"Offering Deals?"}];
+//    self.deals = @{@"title":@"Deals", @"values":values};
+    [self.deals setObject:@"Deals" forKey:@"title"];
+    [self.deals setObject:values forKey:@"values"];
+    NSLog(@"%@", self.deals);
+//    NSLog(@"Deals count is %ld", self.deals.count);
+}
+
 - (void) initCategories {
-    self.categories = @[@{@"name": @"Afghan", @"code": @"afghani"},
+    NSArray *values = @[@{@"name": @"Afghan", @"code": @"afghani"},
                             @{@"name": @"African", @"code": @"african"},
                             @{@"name": @"American, New", @"code": @"newamerican"},
                             @{@"name": @"American, Traditional", @"code": @"tradamerican"},
@@ -262,6 +324,9 @@
                             @{@"name": @"Wok", @"code": @"wok"},
                             @{@"name": @"Wraps", @"code": @"wraps"},
                             @{@"name": @"Yugoslav", @"code": @"yugoslav"}];
+//    self.deals = @{@"title":@"Categories", @"values":values};
+    [self.categories setObject:@"Categories" forKey:@"title"];
+    [self.categories setObject:values forKey:@"values"];
 }
 
 @end

@@ -29,14 +29,15 @@
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
-    [self yelpSearch:@""];
+    [self yelpSearch:@"" withDeals:[@NO boolValue]];
 }
 
-- (void) yelpSearch:(NSString *) categoryFilter {
+- (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn {
+    NSLog(@"%@", isOn ? @"YES": @"NO");
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:YelpSortModeBestMatched
                       categories:@[categoryFilter]
-                           deals:NO
+                           deals:isOn
                       completion:^(NSArray *businesses, NSError *error) {
                           self.businesses = businesses;
                           [self.yelpTableView reloadData];
@@ -61,7 +62,9 @@
 
 - (void) filtersViewController:(FiltersViewController *)filtersViewController didChangeFilters:(NSDictionary *)filters {
     NSLog(@"Firing a networking event %@", filters);
-    [self yelpSearch:[filters objectForKey:@"category_filter"]];
+    NSLog(@"Firing a networking event %@", [filters objectForKey:@"deals_on"]);
+    NSNumber *dealOption = [filters objectForKey:@"deals_on"];
+    [self yelpSearch:[filters objectForKey:@"category_filter"] withDeals:[dealOption boolValue]];
 }
 - (void) onFilterTapped {
     FiltersViewController *viewController = [[FiltersViewController alloc] init];
