@@ -11,7 +11,7 @@
 #import "YelpContentCell.h"
 #import "FiltersViewController.h"
 
-@interface MainViewController () <UITableViewDataSource, FiltersViewControllerDelegate>
+@interface MainViewController () <UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *yelpTableView;
 @property (strong, nonatomic) NSArray *businesses;
 
@@ -29,7 +29,19 @@
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.yelpTableView addGestureRecognizer:gestureRecognizer];
     [self yelpSearch:@"" withDeals:[@NO boolValue] withSortMode:YelpSortModeBestMatched withDistance:nil];
+}
+
+- (void) hideKeyboard {
+    UISearchBar *searchBar = (UISearchBar*)[self.navigationItem titleView];
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    NSLog(@"%@", searchText);
 }
 
 - (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn withSortMode:(YelpSortMode) sortMode withDistance:(NSNumber *) distance {
