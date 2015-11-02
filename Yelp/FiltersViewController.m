@@ -17,10 +17,13 @@
 @property (nonatomic, strong) NSMutableDictionary *categories;
 @property (nonatomic, strong) NSMutableDictionary *deals;
 @property (nonatomic, strong) NSMutableDictionary *sortModes;
+@property (nonatomic, strong) NSMutableDictionary *distanceFields;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
 @property (nonatomic, strong) NSMutableArray *filterOptions;
 @property (nonatomic, assign) BOOL dealsOn;
 @property (nonatomic, assign) NSInteger selectedSortMode;
+@property (nonatomic) NSNumber *selectedDistance;
+
 
 - (void) initCategories;
 
@@ -39,6 +42,7 @@
         self.deals = [[NSMutableDictionary alloc] init];
         self.categories = [[NSMutableDictionary alloc] init];
         self.sortModes = [[NSMutableDictionary alloc] init];
+        self.distanceFields = [[NSMutableDictionary alloc] init];
         [self initFilterOptions];
     }
     return self;
@@ -74,7 +78,12 @@
     } else {
         [filters setObject:@NO forKey:@"deals_on"];
     }
-    [filters setObject:[NSNumber numberWithInt:self.selectedSortMode] forKey:@"sort_mode"];
+    if(self.selectedSortMode) {
+        [filters setObject:[NSNumber numberWithInt:self.selectedSortMode] forKey:@"sort_mode"];
+    }
+    if(self.selectedDistance) {
+        [filters setObject:self.selectedDistance forKey:@"distance"];
+    }
     NSLog(@"%@", filters);
     return filters;
 }
@@ -97,8 +106,18 @@
 }
 
 - (void) yelpPickerCell:(YelpPickerCell *)cell didUpdateValue:(NSInteger)option {
-    NSLog(@"Value changed to %ld", option);
-    self.selectedSortMode = option;
+    NSIndexPath *index = [self.filtersTableView indexPathForCell:cell];
+    NSDictionary *dict = self.filterOptions[index.section];
+    NSString *title = dict[@"title"];
+    if([title isEqualToString:@"Distance"]) {
+        NSArray *values = [self.distanceFields[@"values"][0] componentsSeparatedByString:@","];
+        NSString *optionValue = values[option];
+        NSString *distance = [[optionValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsSeparatedByString:@" "][0];
+        NSLog(@"%.2f", [distance doubleValue]);
+        self.selectedDistance = [NSNumber numberWithDouble:[distance doubleValue]];
+    } else {
+        self.selectedSortMode = option;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -117,7 +136,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if([self.filterOptions[indexPath.section][@"title"] isEqualToString:@"Sort By"]) {
+    NSString *title = self.filterOptions[indexPath.section][@"title"];
+    if([title isEqualToString:@"Sort By"] || [title isEqualToString:@"Distance"]) {
         YelpPickerCell *pickerCell = [tableView dequeueReusableCellWithIdentifier:@"pickerCell"];
         NSString *values = self.filterOptions[indexPath.section][@"values"][0];
         NSArray *options = [values componentsSeparatedByString:@","];
@@ -155,13 +175,23 @@
     [self.sortModes setObject:values forKey:@"values"];
 }
 
+- (void) initDistanceFields {
+    NSArray *values = @[@"0.3 miles, 1 mile, 5 miles, 20 miles"];
+    [self.distanceFields setObject:@"Distance" forKey:@"title"];
+    [self.distanceFields setObject:values forKey:@"values"];
+}
+
+
 - (void) initFilterOptions {
     [self initDealsArray];
     [self initCategories];
     [self initSortModes];
+    [self initDistanceFields];
     [self.filterOptions addObject:self.deals];
     [self.filterOptions addObject:self.sortModes];
+    [self.filterOptions addObject:self.distanceFields];
     [self.filterOptions addObject:self.categories];
+
 }
 
 - (void) initDealsArray {

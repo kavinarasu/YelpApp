@@ -50,6 +50,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
                        sortMode:YelpSortModeBestMatched
                      categories:nil
                           deals:NO
+                       distance:nil
                      completion:completion];
 }
 
@@ -57,6 +58,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
                                   sortMode:(YelpSortMode)sortMode
                                 categories:(NSArray *)categories
                                      deals:(BOOL)hasDeal
+                                  distance:(NSNumber *)distance
                                 completion:(void (^)(NSArray *businesses, NSError *error))completion {
     
     // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
@@ -71,6 +73,11 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     
     if (hasDeal) {
         parameters[@"deals_filter"] = [NSNumber numberWithBool:hasDeal];
+    }
+    
+    if(distance) {
+        float milesPerMeter = 0.000621371;
+        parameters[@"radius_filter"] = [NSNumber numberWithDouble:[distance doubleValue] / milesPerMeter];
     }
     
     NSLog(@"%@", parameters);

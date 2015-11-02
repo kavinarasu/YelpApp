@@ -29,15 +29,16 @@
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
-    [self yelpSearch:@"" withDeals:[@NO boolValue] withSortMode:YelpSortModeBestMatched];
+    [self yelpSearch:@"" withDeals:[@NO boolValue] withSortMode:YelpSortModeBestMatched withDistance:nil];
 }
 
-- (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn withSortMode:(YelpSortMode) sortMode {
+- (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn withSortMode:(YelpSortMode) sortMode withDistance:(NSNumber *) distance {
     NSLog(@"%@", isOn ? @"YES": @"NO");
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:sortMode
                       categories:@[categoryFilter]
                            deals:isOn
+                        distance:distance
                       completion:^(NSArray *businesses, NSError *error) {
                           self.businesses = businesses;
                           [self.yelpTableView reloadData];
@@ -65,14 +66,15 @@
     NSLog(@"Firing a networking event %@", [filters objectForKey:@"deals_on"]);
     NSNumber *dealOption = [filters objectForKey:@"deals_on"];
     NSNumber *sortMode = [filters objectForKey:@"sort_mode"];
-        NSLog(@"Firing a networking event %@", sortMode);
+    NSNumber *distance = [filters objectForKey:@"distance"];
+    NSLog(@"Firing a networking event %@", sortMode);
     YelpSortMode yelpSortMode;
     if(sortMode) {
         yelpSortMode = (YelpSortMode) [sortMode intValue];
     } else {
         yelpSortMode = YelpSortModeBestMatched;
     }
-    [self yelpSearch:[filters objectForKey:@"category_filter"] withDeals:[dealOption boolValue] withSortMode:yelpSortMode];
+    [self yelpSearch:[filters objectForKey:@"category_filter"] withDeals:[dealOption boolValue] withSortMode:yelpSortMode withDistance:distance];
 }
 - (void) onFilterTapped {
     FiltersViewController *viewController = [[FiltersViewController alloc] init];
