@@ -29,13 +29,13 @@
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
-    [self yelpSearch:@"" withDeals:[@NO boolValue]];
+    [self yelpSearch:@"" withDeals:[@NO boolValue] withSortMode:YelpSortModeBestMatched];
 }
 
-- (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn {
+- (void) yelpSearch:(NSString *) categoryFilter withDeals:(BOOL) isOn withSortMode:(YelpSortMode) sortMode {
     NSLog(@"%@", isOn ? @"YES": @"NO");
     [YelpBusiness searchWithTerm:@"Restaurants"
-                        sortMode:YelpSortModeBestMatched
+                        sortMode:sortMode
                       categories:@[categoryFilter]
                            deals:isOn
                       completion:^(NSArray *businesses, NSError *error) {
@@ -64,7 +64,15 @@
     NSLog(@"Firing a networking event %@", filters);
     NSLog(@"Firing a networking event %@", [filters objectForKey:@"deals_on"]);
     NSNumber *dealOption = [filters objectForKey:@"deals_on"];
-    [self yelpSearch:[filters objectForKey:@"category_filter"] withDeals:[dealOption boolValue]];
+    NSNumber *sortMode = [filters objectForKey:@"sort_mode"];
+        NSLog(@"Firing a networking event %@", sortMode);
+    YelpSortMode yelpSortMode;
+    if(sortMode) {
+        yelpSortMode = (YelpSortMode) [sortMode intValue];
+    } else {
+        yelpSortMode = YelpSortModeBestMatched;
+    }
+    [self yelpSearch:[filters objectForKey:@"category_filter"] withDeals:[dealOption boolValue] withSortMode:yelpSortMode];
 }
 - (void) onFilterTapped {
     FiltersViewController *viewController = [[FiltersViewController alloc] init];

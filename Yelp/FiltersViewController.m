@@ -8,16 +8,19 @@
 
 #import "FiltersViewController.h"
 #import "SwitchCell.h"
+#import "YelpPickerCell.h"
 
-@interface FiltersViewController () <UITableViewDataSource, SwitchCellDelegate>
+@interface FiltersViewController () <UITableViewDataSource, SwitchCellDelegate, YelpPickerCellDelegate>
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *filtersTableView;
 @property (nonatomic, strong) NSMutableDictionary *categories;
 @property (nonatomic, strong) NSMutableDictionary *deals;
+@property (nonatomic, strong) NSMutableDictionary *sortModes;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
 @property (nonatomic, strong) NSMutableArray *filterOptions;
 @property (nonatomic, assign) BOOL dealsOn;
+@property (nonatomic, assign) NSInteger selectedSortMode;
 
 - (void) initCategories;
 
@@ -35,6 +38,7 @@
         self.filterOptions = [[NSMutableArray alloc] init];
         self.deals = [[NSMutableDictionary alloc] init];
         self.categories = [[NSMutableDictionary alloc] init];
+        self.sortModes = [[NSMutableDictionary alloc] init];
         [self initFilterOptions];
     }
     return self;
@@ -49,6 +53,8 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStylePlain target:self action:@selector(onApplyTapped)];
     self.filtersTableView.dataSource = self;
     [self.filtersTableView registerNib:[UINib nibWithNibName:@"SwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
+    [self.filtersTableView registerNib:[UINib nibWithNibName:@"YelpPickerCell" bundle:nil] forCellReuseIdentifier:@"pickerCell"];
+
 }
 
 - (NSDictionary *) filters {
@@ -68,6 +74,7 @@
     } else {
         [filters setObject:@NO forKey:@"deals_on"];
     }
+    [filters setObject:[NSNumber numberWithInt:self.selectedSortMode] forKey:@"sort_mode"];
     NSLog(@"%@", filters);
     return filters;
 }
@@ -89,6 +96,11 @@
     }
 }
 
+- (void) yelpPickerCell:(YelpPickerCell *)cell didUpdateValue:(NSInteger)option {
+    NSLog(@"Value changed to %ld", option);
+    self.selectedSortMode = option;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSLog(@"%ld", self.filterOptions.count);
     return self.filterOptions.count;
@@ -105,15 +117,19 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if([self.filterOptions[indexPath.section][@"title"] isEqualToString:@"Sort By"]) {
+        YelpPickerCell *pickerCell = [tableView dequeueReusableCellWithIdentifier:@"pickerCell"];
+        NSString *values = self.filterOptions[indexPath.section][@"values"][0];
+        NSArray *options = [values componentsSeparatedByString:@","];
+        NSLog(@"%@", options);
+        [pickerCell setOptions:options];
+        [pickerCell setSelectedIndex:self.selectedSortMode];
+        pickerCell.delegate = self;
+        return pickerCell;
+    }
     SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-//    NSLog(@"section and row is %ld, %ld", indexPath.section, indexPath.row);
-//    NSLog(@"%@", self.filterOptions[0][0][@"name"]);
-//    NSLog(@"%@", self.filterOptions[1][0][@"name"]);
-//    NSLog(@"%@", self.filterOptions[1][1][@"name"]);
     cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
     cell.on = [self.selectedCategories containsObject:self.filterOptions[indexPath.section][@"values"][indexPath.row]];
-//    cell.filterLabel.text = self.categories[indexPath.row][@"name"];
-//    cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
     cell.delegate = self;
     return cell;
 }
@@ -133,25 +149,25 @@
     [self dismissViewControllerAnimated:YES completion:nil];    
 }
 
+- (void) initSortModes {
+    NSArray *values = @[@"Best Matched, Distance, Highest Rated"];
+    [self.sortModes setObject:@"Sort By" forKey:@"title"];
+    [self.sortModes setObject:values forKey:@"values"];
+}
+
 - (void) initFilterOptions {
     [self initDealsArray];
     [self initCategories];
-    NSLog(@"%@", self.deals);
-    NSLog(@"%@", self.categories);
+    [self initSortModes];
     [self.filterOptions addObject:self.deals];
+    [self.filterOptions addObject:self.sortModes];
     [self.filterOptions addObject:self.categories];
-//    NSLog(@"%@", self.deals);
-//    NSLog(@"Total count is %ld", self.filterOptions.count);
 }
 
 - (void) initDealsArray {
-//    self.deals = @[@{@"name": @"Offering Deals?"}];
     NSArray *values = @[@{@"name": @"Offering Deals?"}];
-//    self.deals = @{@"title":@"Deals", @"values":values};
     [self.deals setObject:@"Deals" forKey:@"title"];
     [self.deals setObject:values forKey:@"values"];
-    NSLog(@"%@", self.deals);
-//    NSLog(@"Deals count is %ld", self.deals.count);
 }
 
 - (void) initCategories {
