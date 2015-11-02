@@ -29,9 +29,13 @@
     UISearchBar *search = [[UISearchBar alloc] init];
     self.navigationItem.titleView = search;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterTapped)];
+    [self yelpSearch:@""];
+}
+
+- (void) yelpSearch:(NSString *) categoryFilter {
     [YelpBusiness searchWithTerm:@"Restaurants"
                         sortMode:YelpSortModeBestMatched
-                      categories:@[@"burgers"]
+                      categories:@[categoryFilter]
                            deals:NO
                       completion:^(NSArray *businesses, NSError *error) {
                           self.businesses = businesses;
@@ -56,7 +60,8 @@
 }
 
 - (void) filtersViewController:(FiltersViewController *)filtersViewController didChangeFilters:(NSDictionary *)filters {
-    NSLog(@"Firing a networking event");
+    NSLog(@"Firing a networking event %@", filters);
+    [self yelpSearch:[filters objectForKey:@"category_filter"]];
 }
 - (void) onFilterTapped {
     FiltersViewController *viewController = [[FiltersViewController alloc] init];
