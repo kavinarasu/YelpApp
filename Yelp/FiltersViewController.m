@@ -7,12 +7,14 @@
 //
 
 #import "FiltersViewController.h"
+#import "SwitchCell.h"
 
-@interface FiltersViewController ()
+@interface FiltersViewController () <UITableViewDataSource, SwitchCellDelegate>
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *filtersTableView;
 @property (nonatomic, strong) NSArray *categories;
+@property (nonatomic, strong) NSMutableSet *selectedCategories;
 
 - (void) initCategories;
 
@@ -24,7 +26,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
     if(self) {
-        
+        self.selectedCategories = [[NSMutableSet alloc] init];
+        [self initCategories];
     }
     return self;
 }
@@ -35,8 +38,32 @@
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(onCancelTapped)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStylePlain target:self action:@selector(onApplyTapped)];
-
+    self.filtersTableView.dataSource = self;
+    [self.filtersTableView registerNib:[UINib nibWithNibName:@"SwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
 }
+
+- (void) switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {
+    NSIndexPath *index = [self.filtersTableView indexPathForCell:cell];
+    if(value) {
+        [self.selectedCategories addObject:self.categories[index.row]];
+    } else {
+        [self.selectedCategories removeObject:self.categories[index.row]];
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.categories.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+    cell.filterLabel.text = self.categories[indexPath.row][@"name"];
+    cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
+    NSLog(@"Selected %s %s", cell.filterLabel.text, cell.on ? "true" : "false");
+    cell.delegate = self;
+    return cell;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

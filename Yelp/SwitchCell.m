@@ -20,6 +20,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -34,7 +35,7 @@
 
 - (void) setOn:(BOOL)on animated:(BOOL) animated {
     _on = on;
-    [self.filterSwitch setOn:YES animated:animated];
+    [self.filterSwitch setOn:on animated:animated];
 }
 
 - (IBAction)filterSwitchChanged:(id)sender {
