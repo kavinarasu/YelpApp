@@ -10,6 +10,7 @@
 #import "YelpBusiness.h"
 #import "YelpContentCell.h"
 #import "FiltersViewController.h"
+#import "JTProgressHUD.h"
 
 @interface MainViewController () <UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *yelpTableView;
@@ -70,7 +71,7 @@
 }
 
 - (void) yelpSearch:(NSString *) searchTerm withCategory:(NSString *) categoryFilter withDeals:(BOOL) isOn withSortMode:(YelpSortMode) sortMode withDistance:(NSNumber *) distance {
-    NSLog(@"%@", isOn ? @"YES": @"NO");
+    [JTProgressHUD show];
     [YelpBusiness searchWithTerm:searchTerm
                         sortMode:sortMode
                       categories:@[categoryFilter]
@@ -79,6 +80,7 @@
                       completion:^(NSArray *businesses, NSError *error) {
                           self.businesses = businesses;
                           [self.yelpTableView reloadData];
+                          [JTProgressHUD hide];
                       }];
 }
 
