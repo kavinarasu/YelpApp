@@ -142,16 +142,15 @@
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:0 inSection:indexPath.section];
                 CollapsibleCell *cell = [tableView cellForRowAtIndexPath:newIndexPath];
                 [cell setHidden:NO];
-//                NSNumber *number = [self.filterOptions objectAtIndex:indexPath.section][@"values"][indexPath.row][@"code"];
-                NSNumber *number = values[indexPath.row][@"code"];
-                NSString *title = [self.filterOptions objectAtIndex:indexPath.section][@"title"];
+                NSNumber *number = values[newIndexPath.row][@"code"];
+                NSString *title = [self.filterOptions objectAtIndex:newIndexPath.section][@"title"];
                 if([title isEqualToString:@"Sort Mode"]) {
                     self.selectedSortMode = [number integerValue];
+                    NSLog(@"%ld", self.selectedSortMode);
                 } else {
                     self.selectedDistance = number;
+                    NSLog(@"%@", self.selectedDistance);
                 }
-//                NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] initWithIndex:indexPath.section];
-//                [self.filtersTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }
             else
             {
@@ -170,11 +169,9 @@
         [self setDealsOn:value];
     }
     if(value && [title isEqualToString:@"Categories"]) {
-//        [self.selectedCategories addObject:self.categories[index.section][index.row]];
         [self.selectedCategories addObject:values[index.row]];
     } else {
         [self.selectedCategories removeObject:values[index.row]];
-//        [self.selectedCategories removeObject:self.categories[index.section][index.row]];
     }
 }
 
@@ -207,16 +204,13 @@
             return 1;
         }
     }
-    NSLog(@"Count is %ld", filter.count);
     return filter.count;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canCollapseSection:(NSInteger)section
 {
     NSString *title = self.filterOptions[section][@"title"];
-    NSLog(@"title is %@", title);
     if ([title isEqualToString:@"Sort Mode"] || [title isEqualToString:@"Distance Values"]) {
-        NSLog(@"Collpasing because of %@", title);
         return YES;
     }
     else {
@@ -238,28 +232,14 @@
             [collapsibleCell setHidden:YES];
         }
         return collapsibleCell;
-//        if(!indexPath.row) {
-//            SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-//            cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
-//            cell.delegate = self;
-//            return cell;
-//        }
     }
-    if([title isEqualToString:@"Sort By"] || [title isEqualToString:@"Distance"]) {
-        YelpPickerCell *pickerCell = [tableView dequeueReusableCellWithIdentifier:@"pickerCell"];
-        NSString *values = self.filterOptions[indexPath.section][@"values"][0];
-        NSArray *options = [values componentsSeparatedByString:@","];
-        NSLog(@"%@", options);
-        [pickerCell setOptions:options];
-        [pickerCell setSelectedIndex:self.selectedSortMode];
-        pickerCell.delegate = self;
-        return pickerCell;
+    else {
+        SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+        cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
+        cell.on = [self.selectedCategories containsObject:self.filterOptions[indexPath.section][@"values"][indexPath.row]];
+        cell.delegate = self;
+        return cell;
     }
-    SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
-    cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
-    cell.on = [self.selectedCategories containsObject:self.filterOptions[indexPath.section][@"values"][indexPath.row]];
-    cell.delegate = self;
-    return cell;
 }
 
 
@@ -307,12 +287,12 @@
     [self initCategories];
 //    [self initSortModes];
     [self initSortModeOptions];
-    [self initDistanceFields];
+//    [self initDistanceFields];
     [self initDistanceValues];
     [self.filterOptions addObject:self.deals];
 //    [self.filterOptions addObject:self.sortModes];
     [self.filterOptions addObject:self.sortModeOptions];
-    [self.filterOptions addObject:self.distanceFields];
+//    [self.filterOptions addObject:self.distanceFields];
     [self.filterOptions addObject:self.distanceValues];
     [self.filterOptions addObject:self.categories];
 
