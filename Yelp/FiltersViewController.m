@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableDictionary *sortModes;
 @property (nonatomic, strong) NSMutableDictionary *sortModeOptions;
 @property (nonatomic, strong) NSMutableDictionary *distanceFields;
+@property (nonatomic, strong) NSMutableDictionary *distanceValues;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
 @property (nonatomic, strong) NSMutableArray *filterOptions;
 @property (nonatomic, assign) BOOL dealsOn;
@@ -48,6 +49,7 @@
         self.distanceFields = [[NSMutableDictionary alloc] init];
         self.sortModeOptions = [[NSMutableDictionary alloc] init];
         self.expanded = [[NSMutableIndexSet alloc] init];
+        self.distanceValues = [[NSMutableDictionary alloc] init];
         [self initFilterOptions];
     }
     return self;
@@ -142,7 +144,12 @@
                 [cell setHidden:NO];
 //                NSNumber *number = [self.filterOptions objectAtIndex:indexPath.section][@"values"][indexPath.row][@"code"];
                 NSNumber *number = values[indexPath.row][@"code"];
-                self.selectedSortMode = [number integerValue];
+                NSString *title = [self.filterOptions objectAtIndex:indexPath.section][@"title"];
+                if([title isEqualToString:@"Sort Mode"]) {
+                    self.selectedSortMode = [number integerValue];
+                } else {
+                    self.selectedDistance = number;
+                }
 //                NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] initWithIndex:indexPath.section];
 //                [self.filtersTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
             }
@@ -208,7 +215,7 @@
 {
     NSString *title = self.filterOptions[section][@"title"];
     NSLog(@"title is %@", title);
-    if ([title isEqualToString:@"Sort Mode"]) {
+    if ([title isEqualToString:@"Sort Mode"] || [title isEqualToString:@"Distance Values"]) {
         NSLog(@"Collpasing because of %@", title);
         return YES;
     }
@@ -289,17 +296,24 @@
     [self.distanceFields setObject:values forKey:@"values"];
 }
 
+- (void) initDistanceValues {
+    NSArray *values = @[@{@"name": @"0.3 miles", @"code":@0.3}, @{@"name": @"1 mile", @"code":@1}, @{@"name": @"5 miles", @"code":@5}, @{@"name": @"20 miles", @"code":@20}];
+    [self.distanceValues setObject:@"Distance Values" forKey:@"title"];
+    [self.distanceValues setObject:values forKey:@"values"];
+}
 
 - (void) initFilterOptions {
     [self initDealsArray];
     [self initCategories];
-    [self initSortModes];
+//    [self initSortModes];
     [self initSortModeOptions];
     [self initDistanceFields];
+    [self initDistanceValues];
     [self.filterOptions addObject:self.deals];
-    [self.filterOptions addObject:self.sortModes];
+//    [self.filterOptions addObject:self.sortModes];
     [self.filterOptions addObject:self.sortModeOptions];
     [self.filterOptions addObject:self.distanceFields];
+    [self.filterOptions addObject:self.distanceValues];
     [self.filterOptions addObject:self.categories];
 
 }
