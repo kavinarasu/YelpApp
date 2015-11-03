@@ -264,7 +264,7 @@
 }
 
 - (void) initSortModeOptions {
-    NSArray *values = @[@{@"name": @"Best Matched", @"code":@1}, @{@"name": @"Distance", @"code":@2}, @{@"name": @"Highest Rated", @"code":@3}];
+    NSArray *values = @[@{@"name": @"Best Matched", @"code":@0}, @{@"name": @"Distance", @"code":@1}, @{@"name": @"Highest Rated", @"code":@2}];
     [self.sortModeOptions setObject:@"Sort By" forKey:@"title"];
     [self.sortModeOptions setObject:values forKey:@"values"];
 }
