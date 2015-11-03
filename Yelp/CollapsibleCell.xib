@@ -15,30 +15,29 @@
                 <rect key="frame" x="0.0" y="0.0" width="335" height="94.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down_arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="EbL-Cp-x8v">
-                        <rect key="frame" x="286" y="15" width="46" height="60"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="46" id="GUY-Dg-GDZ"/>
-                            <constraint firstAttribute="height" constant="60" id="WrK-IK-7Sz"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3o-Nz-Xc1">
                         <rect key="frame" x="16" y="37" width="42" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down_arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="F2z-Ab-92F">
+                        <rect key="frame" x="292" y="30" width="36" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="36" id="7BS-ot-UzD"/>
+                            <constraint firstAttribute="width" constant="36" id="Q1H-uV-Kgv"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="EbL-Cp-x8v" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="4eh-R0-uak"/>
+                    <constraint firstItem="F2z-Ab-92F" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="DPE-DU-fX8"/>
                     <constraint firstItem="T3o-Nz-Xc1" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="GlQ-KG-RGt"/>
-                    <constraint firstAttribute="bottom" secondItem="EbL-Cp-x8v" secondAttribute="bottom" constant="19.5" id="LL1-Wq-Oab"/>
-                    <constraint firstAttribute="trailing" secondItem="EbL-Cp-x8v" secondAttribute="trailing" constant="3" id="mLC-TS-ejy"/>
+                    <constraint firstAttribute="trailing" secondItem="F2z-Ab-92F" secondAttribute="trailing" constant="7" id="l4M-wH-qAG"/>
                     <constraint firstItem="T3o-Nz-Xc1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="8" id="mNU-yh-pcd"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="arrowImage" destination="EbL-Cp-x8v" id="EX0-gJ-aTw"/>
+                <outlet property="arrowImage" destination="F2z-Ab-92F" id="PcF-oR-SgT"/>
                 <outlet property="filterLabel" destination="T3o-Nz-Xc1" id="GTX-FS-3Sh"/>
             </connections>
             <point key="canvasLocation" x="316.5" y="233.5"/>
