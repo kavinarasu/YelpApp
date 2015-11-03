@@ -51,7 +51,6 @@
     CGFloat actualPosition = scrollView.contentOffset.y;
     CGFloat contentHeight = scrollView.contentSize.height - self.yelpTableView.frame.size.height;
     if (actualPosition >= contentHeight && self.businesses.count > 0) {
-        NSLog(@"Reached end");
         YelpSortMode yelpSortMode;
         if(self.sortMode) {
             yelpSortMode = (YelpSortMode) [self.sortMode intValue];
@@ -75,7 +74,6 @@
 
 - (void) searchWithTerm:(NSString*) text {
     if(text && [text length] != 0) {
-        NSLog(@"Search term typed %@", text);
         self.searchTerm = text;
     } else {
         self.searchTerm = @"Restaurants";

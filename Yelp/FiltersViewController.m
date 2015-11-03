@@ -225,7 +225,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *title = self.filterOptions[indexPath.section][@"title"];
     if([self tableView:tableView canCollapseSection:indexPath.section]) {
-        NSLog(@"This is a collapsible cell");
         CollapsibleCell *collapsibleCell = [tableView dequeueReusableCellWithIdentifier:@"collapsibleCell"];
         collapsibleCell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
         if(indexPath.row) {
@@ -285,14 +284,10 @@
 - (void) initFilterOptions {
     [self initDealsArray];
     [self initCategories];
-//    [self initSortModes];
     [self initSortModeOptions];
-//    [self initDistanceFields];
     [self initDistanceValues];
     [self.filterOptions addObject:self.deals];
-//    [self.filterOptions addObject:self.sortModes];
     [self.filterOptions addObject:self.sortModeOptions];
-//    [self.filterOptions addObject:self.distanceFields];
     [self.filterOptions addObject:self.distanceValues];
     [self.filterOptions addObject:self.categories];
 
@@ -474,7 +469,6 @@
                             @{@"name": @"Wok", @"code": @"wok"},
                             @{@"name": @"Wraps", @"code": @"wraps"},
                             @{@"name": @"Yugoslav", @"code": @"yugoslav"}];
-//    self.deals = @{@"title":@"Categories", @"values":values};
     [self.categories setObject:@"Categories" forKey:@"title"];
     [self.categories setObject:values forKey:@"values"];
 }
