@@ -79,6 +79,7 @@
             categories:(NSArray *)categories
                  deals:(BOOL)hasDeal
               distance:(NSNumber *) distance
+                offset:(NSNumber *) offset
             completion:(void (^)(NSArray *businesses, NSError *error))completion {
 
     [[YelpClient sharedInstance] searchWithTerm:term
@@ -86,6 +87,7 @@
                                      categories:categories
                                           deals:hasDeal
                                        distance: distance
+                                         offset: offset
                                      completion:completion];
 }
 

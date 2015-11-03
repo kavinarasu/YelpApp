@@ -31,6 +31,7 @@
             categories:(NSArray *)categories
                  deals:(BOOL)hasDeal
               distance:(NSNumber *) distance
+                offset:(NSNumber *) offset
             completion:(void (^)(NSArray *businesses, NSError *error))completion;
 
 @end
