@@ -9,6 +9,7 @@
 #import "FiltersViewController.h"
 #import "SwitchCell.h"
 #import "YelpPickerCell.h"
+#import "CollapsibleCell.h"
 
 @interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, YelpPickerCellDelegate>
 
@@ -17,12 +18,14 @@
 @property (nonatomic, strong) NSMutableDictionary *categories;
 @property (nonatomic, strong) NSMutableDictionary *deals;
 @property (nonatomic, strong) NSMutableDictionary *sortModes;
+@property (nonatomic, strong) NSMutableDictionary *sortModeOptions;
 @property (nonatomic, strong) NSMutableDictionary *distanceFields;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
 @property (nonatomic, strong) NSMutableArray *filterOptions;
 @property (nonatomic, assign) BOOL dealsOn;
 @property (nonatomic, assign) NSInteger selectedSortMode;
 @property (nonatomic) NSNumber *selectedDistance;
+@property (nonatomic, strong) NSMutableIndexSet *expanded;
 
 
 - (void) initCategories;
@@ -43,6 +46,8 @@
         self.categories = [[NSMutableDictionary alloc] init];
         self.sortModes = [[NSMutableDictionary alloc] init];
         self.distanceFields = [[NSMutableDictionary alloc] init];
+        self.sortModeOptions = [[NSMutableDictionary alloc] init];
+        self.expanded = [[NSMutableIndexSet alloc] init];
         [self initFilterOptions];
     }
     return self;
@@ -59,6 +64,7 @@
     self.filtersTableView.delegate = self;
     [self.filtersTableView registerNib:[UINib nibWithNibName:@"SwitchCell" bundle:nil] forCellReuseIdentifier:@"switchCell"];
     [self.filtersTableView registerNib:[UINib nibWithNibName:@"YelpPickerCell" bundle:nil] forCellReuseIdentifier:@"pickerCell"];
+    [self.filtersTableView registerNib:[UINib nibWithNibName:@"CollapsibleCell" bundle:nil] forCellReuseIdentifier:@"collapsibleCell"];
 
 }
 
@@ -91,6 +97,61 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.filtersTableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if ([self tableView:tableView canCollapseSection:indexPath.section])
+    {
+            BOOL currentlyExpanded = [self.expanded containsIndex:indexPath.section];
+            NSInteger rows;
+            NSMutableArray *tmpArray = [NSMutableArray array];
+            if (currentlyExpanded)
+            {
+                rows = [self tableView:tableView numberOfRowsInSection:indexPath.section];
+                [self.expanded removeIndex:indexPath.section];
+                
+            }
+            else
+            {
+                [self.expanded addIndex:indexPath.section];
+                rows = [self tableView:tableView numberOfRowsInSection:indexPath.section];
+            }
+        
+//            [tmpArray addObject:indexPath];
+            for (int i=0; i<rows; i++)
+            {
+                if(i!=indexPath.row) {
+                
+                NSIndexPath *tmpIndexPath = [NSIndexPath indexPathForRow:i
+                                                               inSection:indexPath.section];
+                    [tmpArray addObject:tmpIndexPath];
+                }
+            }
+            
+            
+            if (currentlyExpanded)
+            {
+                [tableView deleteRowsAtIndexPaths:tmpArray
+                                 withRowAnimation:UITableViewRowAnimationTop];
+                NSMutableArray *values = [[self.filterOptions objectAtIndex:indexPath.section][@"values"] mutableCopy];
+            
+                NSLog(@"%@", values);
+                [values exchangeObjectAtIndex:0 withObjectAtIndex:indexPath.row];
+                NSLog(@"%@", values);
+                [[self.filterOptions objectAtIndex:indexPath.section] setObject:values forKey:@"values"];
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:0 inSection:indexPath.section];
+                CollapsibleCell *cell = [tableView cellForRowAtIndexPath:newIndexPath];
+                [cell setHidden:NO];
+//                NSNumber *number = [self.filterOptions objectAtIndex:indexPath.section][@"values"][indexPath.row][@"code"];
+                NSNumber *number = values[indexPath.row][@"code"];
+                self.selectedSortMode = [number integerValue];
+//                NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] initWithIndex:indexPath.section];
+//                [self.filtersTableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+            }
+            else
+            {
+                [tableView insertRowsAtIndexPaths:tmpArray
+                                 withRowAnimation:UITableViewRowAnimationTop];
+            }
+    }
 }
 
 - (void) switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {
@@ -132,8 +193,28 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSArray *filter = self.filterOptions[section][@"values"];
+    if([self tableView:tableView canCollapseSection:section]) {
+        if([self.expanded containsIndex:section]) {
+            return filter.count;
+        } else {
+            return 1;
+        }
+    }
     NSLog(@"Count is %ld", filter.count);
     return filter.count;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canCollapseSection:(NSInteger)section
+{
+    NSString *title = self.filterOptions[section][@"title"];
+    NSLog(@"title is %@", title);
+    if ([title isEqualToString:@"Sort Mode"]) {
+        NSLog(@"Collpasing because of %@", title);
+        return YES;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -142,6 +223,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *title = self.filterOptions[indexPath.section][@"title"];
+    if([self tableView:tableView canCollapseSection:indexPath.section]) {
+        NSLog(@"This is a collapsible cell");
+        CollapsibleCell *collapsibleCell = [tableView dequeueReusableCellWithIdentifier:@"collapsibleCell"];
+        collapsibleCell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
+        if(indexPath.row) {
+            [collapsibleCell setHidden:YES];
+        }
+        return collapsibleCell;
+//        if(!indexPath.row) {
+//            SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+//            cell.filterLabel.text = self.filterOptions[indexPath.section][@"values"][indexPath.row][@"name"];
+//            cell.delegate = self;
+//            return cell;
+//        }
+    }
     if([title isEqualToString:@"Sort By"] || [title isEqualToString:@"Distance"]) {
         YelpPickerCell *pickerCell = [tableView dequeueReusableCellWithIdentifier:@"pickerCell"];
         NSString *values = self.filterOptions[indexPath.section][@"values"][0];
@@ -180,6 +276,13 @@
     [self.sortModes setObject:values forKey:@"values"];
 }
 
+- (void) initSortModeOptions {
+    NSArray *values = @[@{@"name": @"Best Matched", @"code":@1}, @{@"name": @"Distance", @"code":@2}, @{@"name": @"Highest Rated", @"code":@3}];
+    [self.sortModeOptions setObject:@"Sort Mode" forKey:@"title"];
+    [self.sortModeOptions setObject:values forKey:@"values"];
+}
+
+
 - (void) initDistanceFields {
     NSArray *values = @[@"0.3 miles, 1 mile, 5 miles, 20 miles"];
     [self.distanceFields setObject:@"Distance" forKey:@"title"];
@@ -191,9 +294,11 @@
     [self initDealsArray];
     [self initCategories];
     [self initSortModes];
+    [self initSortModeOptions];
     [self initDistanceFields];
     [self.filterOptions addObject:self.deals];
     [self.filterOptions addObject:self.sortModes];
+    [self.filterOptions addObject:self.sortModeOptions];
     [self.filterOptions addObject:self.distanceFields];
     [self.filterOptions addObject:self.categories];
 

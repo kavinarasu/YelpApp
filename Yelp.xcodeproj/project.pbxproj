@@ -33,6 +33,9 @@
 		8AB8D8B91BE6CFAF005E37C7 /* SwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AB8D8B71BE6CFAF005E37C7 /* SwitchCell.xib */; settings = {ASSET_TAGS = (); }; };
 		8AB8D8BD1BE74762005E37C7 /* YelpPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB8D8BB1BE74762005E37C7 /* YelpPickerCell.m */; settings = {ASSET_TAGS = (); }; };
 		8AB8D8BE1BE74762005E37C7 /* YelpPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AB8D8BC1BE74762005E37C7 /* YelpPickerCell.xib */; settings = {ASSET_TAGS = (); }; };
+		8AB8D8C21BE84AE4005E37C7 /* CollapsibleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB8D8C01BE84AE4005E37C7 /* CollapsibleCell.m */; settings = {ASSET_TAGS = (); }; };
+		8AB8D8C31BE84AE4005E37C7 /* CollapsibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AB8D8C11BE84AE4005E37C7 /* CollapsibleCell.xib */; settings = {ASSET_TAGS = (); }; };
+		8AB8D8C51BE84B7C005E37C7 /* down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AB8D8C41BE84B7C005E37C7 /* down_arrow.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +85,10 @@
 		8AB8D8BA1BE74762005E37C7 /* YelpPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YelpPickerCell.h; sourceTree = "<group>"; };
 		8AB8D8BB1BE74762005E37C7 /* YelpPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YelpPickerCell.m; sourceTree = "<group>"; };
 		8AB8D8BC1BE74762005E37C7 /* YelpPickerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YelpPickerCell.xib; sourceTree = "<group>"; };
+		8AB8D8BF1BE84AE4005E37C7 /* CollapsibleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapsibleCell.h; sourceTree = "<group>"; };
+		8AB8D8C01BE84AE4005E37C7 /* CollapsibleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapsibleCell.m; sourceTree = "<group>"; };
+		8AB8D8C11BE84AE4005E37C7 /* CollapsibleCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollapsibleCell.xib; sourceTree = "<group>"; };
+		8AB8D8C41BE84B7C005E37C7 /* down_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = down_arrow.png; path = ../../../../../Desktop/down_arrow.png; sourceTree = "<group>"; };
 		9DEC6D18C14F46F8AF2EA320 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A28C751BD8043032F84076DB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		FCA9D9EAA444BE83C105EDA0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -178,6 +185,7 @@
 		42FD6C5018DC286B000BF2B9 /* Yelp */ = {
 			isa = PBXGroup;
 			children = (
+				8AB8D8C41BE84B7C005E37C7 /* down_arrow.png */,
 				8AB8D8AB1BE34857005E37C7 /* Views */,
 				11F304F91BDC20F3000ED8EF /* Models */,
 				420474F318DC297600E88E07 /* API */,
@@ -241,6 +249,9 @@
 				8AB8D8BA1BE74762005E37C7 /* YelpPickerCell.h */,
 				8AB8D8BB1BE74762005E37C7 /* YelpPickerCell.m */,
 				8AB8D8BC1BE74762005E37C7 /* YelpPickerCell.xib */,
+				8AB8D8BF1BE84AE4005E37C7 /* CollapsibleCell.h */,
+				8AB8D8C01BE84AE4005E37C7 /* CollapsibleCell.m */,
+				8AB8D8C11BE84AE4005E37C7 /* CollapsibleCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -331,6 +342,8 @@
 				8AB8D8B41BE6CAB5005E37C7 /* FiltersViewController.xib in Resources */,
 				8AB8D8B91BE6CFAF005E37C7 /* SwitchCell.xib in Resources */,
 				42FD6C5D18DC286B000BF2B9 /* Images.xcassets in Resources */,
+				8AB8D8C31BE84AE4005E37C7 /* CollapsibleCell.xib in Resources */,
+				8AB8D8C51BE84B7C005E37C7 /* down_arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +416,7 @@
 				8AB8D8BD1BE74762005E37C7 /* YelpPickerCell.m in Sources */,
 				8AB8D8A91BE34810005E37C7 /* YelpContentCell.m in Sources */,
 				42FD6C5718DC286B000BF2B9 /* main.m in Sources */,
+				8AB8D8C21BE84AE4005E37C7 /* CollapsibleCell.m in Sources */,
 				420474F618DC299500E88E07 /* YelpClient.m in Sources */,
 				420474FB18DC2B2100E88E07 /* MainViewController.m in Sources */,
 				11F304FF1BDC476D000ED8EF /* YelpBusiness.m in Sources */,
