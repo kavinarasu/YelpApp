@@ -144,10 +144,10 @@
                 [cell setHidden:NO];
                 NSNumber *number = values[newIndexPath.row][@"code"];
                 NSString *title = [self.filterOptions objectAtIndex:newIndexPath.section][@"title"];
-                if([title isEqualToString:@"Sort Mode"]) {
+                if([title isEqualToString:@"Sort By"]) {
                     self.selectedSortMode = [number integerValue];
                     NSLog(@"%ld", self.selectedSortMode);
-                } else {
+                } else if([title isEqualToString:@"Distance"]){
                     self.selectedDistance = number;
                     NSLog(@"%@", self.selectedDistance);
                 }
@@ -210,7 +210,7 @@
 - (BOOL)tableView:(UITableView *)tableView canCollapseSection:(NSInteger)section
 {
     NSString *title = self.filterOptions[section][@"title"];
-    if ([title isEqualToString:@"Sort Mode"] || [title isEqualToString:@"Distance Values"]) {
+    if ([title isEqualToString:@"Sort By"] || [title isEqualToString:@"Distance"]) {
         return YES;
     }
     else {
@@ -259,26 +259,26 @@
 
 - (void) initSortModes {
     NSArray *values = @[@"Best Matched, Distance, Highest Rated"];
-    [self.sortModes setObject:@"Sort By" forKey:@"title"];
+    [self.sortModes setObject:@"Sort Mode" forKey:@"title"];
     [self.sortModes setObject:values forKey:@"values"];
 }
 
 - (void) initSortModeOptions {
     NSArray *values = @[@{@"name": @"Best Matched", @"code":@1}, @{@"name": @"Distance", @"code":@2}, @{@"name": @"Highest Rated", @"code":@3}];
-    [self.sortModeOptions setObject:@"Sort Mode" forKey:@"title"];
+    [self.sortModeOptions setObject:@"Sort By" forKey:@"title"];
     [self.sortModeOptions setObject:values forKey:@"values"];
 }
 
 
 - (void) initDistanceFields {
     NSArray *values = @[@"0.3 miles, 1 mile, 5 miles, 20 miles"];
-    [self.distanceFields setObject:@"Distance" forKey:@"title"];
+    [self.distanceFields setObject:@"Distance Values" forKey:@"title"];
     [self.distanceFields setObject:values forKey:@"values"];
 }
 
 - (void) initDistanceValues {
     NSArray *values = @[@{@"name": @"0.3 miles", @"code":@0.3}, @{@"name": @"1 mile", @"code":@1}, @{@"name": @"5 miles", @"code":@5}, @{@"name": @"20 miles", @"code":@20}];
-    [self.distanceValues setObject:@"Distance Values" forKey:@"title"];
+    [self.distanceValues setObject:@"Distance" forKey:@"title"];
     [self.distanceValues setObject:values forKey:@"values"];
 }
 
